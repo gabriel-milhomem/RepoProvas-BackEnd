@@ -17,7 +17,16 @@ async function getAllTeachers() {
     return allTeachers.rows;
 }
 
+async function getNumberOfTestsByTeacher(teacher) {
+    const query = 'SELECT * FROM tests WHERE teacher_id = $1';
+    const totalTests = await connection.query(query, [teacher.id]);
+    teacher.numberTests = totalTests.rows.length;
+
+    return teacher;
+}
+
 module.exports = {
     findTeachersBySubject,
     getAllTeachers,
+    getNumberOfTestsByTeacher
 }

@@ -2,8 +2,10 @@ const teachersRepository = require('../repository/teachers');
 
 async function getTeachers(req, res) {
     try {
-        const allTeachers = await teachersRepository.getAllTeachers();
-        return res.status(200).send(allTeachers);
+        let allTeachers = await teachersRepository.getAllTeachers();
+        allTeachers = allTeachers.map(t => ({...t, numberTest: 0}));
+        const withNumberOfTests = await Promise.all(allTeachers.map(t => teachersRepository.getNumberOfTestsByTeacher(t)))
+        return res.status(200).send(withNumberOfTests);
         
     } catch(err) {
         console.log(err);
