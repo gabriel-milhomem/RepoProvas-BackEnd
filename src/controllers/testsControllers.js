@@ -16,6 +16,20 @@ async function postTests(req, res) {
     }
 }
 
+async function getTestsByTeacher(req, res) {
+    try {
+        const { id } = req.params;
+        let allTests = await testsRepository.findTestsByTeacher(id);
+        allTests = await testsRepository.orderByCategorie(allTests);
+        return res.status(200).send(allTests);
+        
+    } catch(err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+}
+
 module.exports = {
-    postTests
+    postTests,
+    getTestsByTeacher
 }

@@ -27,5 +27,5 @@ async function getTeachersBySubject(req, res) {
 
 module.exports = {
     getTeachers,
-    getTeachersBySubject
+    getTeachersBySubject,
 }

@@ -16,5 +16,6 @@ app.get('/api/teachers', teachersControllers.getTeachers);
 app.get('/api/teachers/subjects/:id', teachersControllers.getTeachersBySubject);
 app.get('/api/subjects/period', subjectsControllers.getSubjectsByPeriod);
 app.post('/api/tests', testsControllers.postTests);
+app.get('/api/tests/teacher/:id', testsControllers.getTestsByTeacher);
 
 module.exports = app;

@@ -1,4 +1,5 @@
 const connection = require('../database');
+const categoriesRepository = require('../repository/categories');
 
 async function insertTest(params) {
     const {name, link, subject, teacher, category} = params;
@@ -6,6 +7,32 @@ async function insertTest(params) {
     await connection.query(query, [name, link, subject, teacher, category]);
 }
 
+async function findTestsByTeacher(id) {
+    const query = `
+        SELECT t.name, t.link, s.name AS subject, tch.name AS teacher, c.name AS category
+        FROM tests AS t 
+        JOIN categories AS c ON t.category_id = c.id 
+        JOIN teachers AS tch ON tch.id = t.teacher_id
+        JOIN subjects AS s ON t.subject_id = s.id WHERE t.teacher_id = $1 ORDER BY name DESC;`;
+    const tests = await connection.query(query, [id]);
+
+    return tests.rows;
+}
+
+async function orderByCategorie(tests) {
+    const categories = await categoriesRepository.getAllCategories();
+    const order = [];
+    categories.forEach(c => {
+        const filtered = tests.filter(t => t.category === c.name);
+        if(filtered.length > 0) {
+            order.push(filtered);
+        }
+    });
+
+    return order;
+}
 module.exports = {
-    insertTest
+    insertTest,
+    findTestsByTeacher,
+    orderByCategorie
 }
