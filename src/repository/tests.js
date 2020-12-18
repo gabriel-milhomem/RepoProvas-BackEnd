@@ -19,7 +19,7 @@ async function findTestsByTeacher(id) {
     return tests.rows;
 }
 
-async function orderByCategorie(tests) {
+async function orderByCategories(tests) {
     const categories = await categoriesRepository.getAllCategories();
     const order = [];
     categories.forEach(c => {
@@ -31,8 +31,22 @@ async function orderByCategorie(tests) {
 
     return order;
 }
+
+async function findTestsBySubject(id) {
+    const query = `
+        SELECT t.name, t.link, s.name AS subject, tch.name AS teacher, c.name AS category
+        FROM tests AS t 
+        JOIN categories AS c ON t.category_id = c.id 
+        JOIN teachers AS tch ON tch.id = t.teacher_id
+        JOIN subjects AS s ON t.subject_id = s.id WHERE t.subject_id = $1 ORDER BY name DESC;`;
+    const tests = await connection.query(query, [id]);
+
+    return tests.rows;
+}
+
 module.exports = {
     insertTest,
     findTestsByTeacher,
-    orderByCategorie
+    orderByCategories,
+    findTestsBySubject
 }

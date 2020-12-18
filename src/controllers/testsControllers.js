@@ -20,7 +20,20 @@ async function getTestsByTeacher(req, res) {
     try {
         const { id } = req.params;
         let allTests = await testsRepository.findTestsByTeacher(id);
-        allTests = await testsRepository.orderByCategorie(allTests);
+        allTests = await testsRepository.orderByCategories(allTests);
+        return res.status(200).send(allTests);
+        
+    } catch(err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+}
+
+async function getTestsBySubject(req, res) {
+    try {
+        const { id } = req.params;
+        let allTests = await testsRepository.findTestsBySubject(id);
+        allTests = await testsRepository.orderByCategories(allTests);
         return res.status(200).send(allTests);
         
     } catch(err) {
@@ -31,5 +44,7 @@ async function getTestsByTeacher(req, res) {
 
 module.exports = {
     postTests,
-    getTestsByTeacher
+    getTestsByTeacher,
+    getTestsBySubject
+    
 }
